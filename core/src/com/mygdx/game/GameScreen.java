@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Ships.SpaceShip;
 
 public class GameScreen implements Screen {
     public static final TextureAtlas textureAtlas = new TextureAtlas("SpaceShipAtlas.atlas");
@@ -18,7 +21,8 @@ public class GameScreen implements Screen {
     //graphics
     private SpriteBatch batch;
     private BackgroundManager backgroundManager;
-    private SpaceShips spaceShips;
+    private SpaceShipManager spaceShipManager;
+    private SpaceShip playerShip;
 
 
     //world parameters
@@ -32,7 +36,10 @@ public class GameScreen implements Screen {
 
         //texture atlas
         backgroundManager = new BackgroundManager();
-        spaceShips = new SpaceShips();
+        spaceShipManager = new SpaceShipManager();
+
+        playerShip = spaceShipManager.makeSpaceShip("Player","Normal","Blue");
+        spaceShipManager.makeSpaceShip("Enemy","Sparrow","Red");
 
 
         batch = new SpriteBatch();
@@ -52,10 +59,38 @@ public class GameScreen implements Screen {
         backgroundManager.draw(batch);
 
         //spaceships
-        spaceShips.draw(batch);
-        spaceShips.update(delta);
+        spaceShipManager.draw(batch);
+        spaceShipManager.update(delta);
+
+        input(delta);
 
         batch.end();
+    }
+
+    private void input(float delta){
+
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && playerShip.getHitBox().getX() < WORLD_WIDTH - playerShip.getHitBox().width) {
+            playerShip.translate(playerShip.getMovement() * delta , 0f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && playerShip.getHitBox().getX() > 0) {
+            playerShip.translate(-playerShip.getMovement() * delta , 0f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && playerShip.getHitBox().getY() < WORLD_HEIGHT/2 - playerShip.getHitBox().height) {
+            playerShip.translate(0f, playerShip.getMovement() * delta);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S) && playerShip.getHitBox().getY() > 0) {
+            playerShip.translate(0f, -playerShip.getMovement() * delta);
+        }
+
+        if (Gdx.input.isTouched()){
+            playerShip.fireLasers();
+        }
+
+
     }
 
 

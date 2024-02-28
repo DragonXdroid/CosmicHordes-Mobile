@@ -8,6 +8,7 @@ import java.util.LinkedList;
 public class NormalShip extends SpaceShip{
     public NormalShip(String alias, String shipType, String color, float xPosition, float yPosition) {
         super(alias, shipType, color, xPosition, yPosition);
+        setMovement(20);
     }
 
     @Override
@@ -16,8 +17,22 @@ public class NormalShip extends SpaceShip{
 
         if (getLaserCoolDownTimer() <= 0){
 
-            lasers.add(new Laser(getAlias(), getColor(),getxPosition() + ( getWidth()*0.22f ), getyPosition()+ (getHeight()*0.4f) ));
-            lasers.add(new Laser(getAlias(), getColor(),getxPosition() + ( getWidth()*0.78f ), getyPosition()+ (getHeight()*0.4f) ));
+
+            if (getLaserCoolDownTimer() <= 0){
+                lasers.add(new Laser(getAlias(), getColor(),
+                        getHitBox().getX() + ( getHitBox().getWidth()*0.22f ),
+                        getHitBox().getY() + (getHitBox().getHeight()*0.4f)
+                ));
+
+                lasers.add(new Laser(getAlias(), getColor(),
+                        getHitBox().getX() + ( getHitBox().getWidth()*0.78f ),
+                        getHitBox().getY() + (getHitBox().getHeight()*0.4f)
+                ));
+
+                setLaserCoolDownTimer(0.5f);
+
+            }
+
             setLaserCoolDownTimer(0.5f);
 
         }
@@ -25,10 +40,16 @@ public class NormalShip extends SpaceShip{
 
     @Override
     public void draw(Batch batch){
-        batch.draw(getShipTexture(), getxPosition(), getyPosition(),getWidth(), getHeight());
+        batch.draw(getShipTexture(), getHitBox().getX(), getHitBox().getY(), getHitBox().getWidth(), getHitBox().getHeight());
         if (getSheild() > 0) {
             float positionOffset = getAlias().equals("Player") ? 2 : -2;
-            batch.draw(getShieldTexture(), getxPosition(), getyPosition() + positionOffset, getWidth(), getHeight());
+            batch.draw(
+                    getShieldTexture(),
+                    getHitBox().getX(),
+                    getHitBox().getY() + positionOffset,
+                    getHitBox().getWidth(),
+                    getHitBox().getHeight()
+            );
         }
     }
 }

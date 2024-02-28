@@ -18,14 +18,11 @@ public abstract class SpaceShip {
     private String color;
     private String shipType;
     private float laserCoolDownTimer;
-    private Rectangle hitBox;
+
     private LinkedList<Laser> lasers = new LinkedList<>();
 
     //position & dimension
-    private float xPosition;
-    private float yPosition;
-    private float width;
-    private float height;
+    private Rectangle hitBox;
 
     // graphics
     private TextureRegion shipTexture;
@@ -39,23 +36,18 @@ public abstract class SpaceShip {
         this.shipType = shipType;
         this.movement = 5;
         this.sheild = 50;
-        this.width = 10;
-        this.height = 10;
+        this.hitBox = new Rectangle(xPosition - 10/2, yPosition - 10/2, 10, 10);
         this.laserCoolDownTimer = 0.5f;
-        this.xPosition = xPosition - width/2;
-        this.yPosition = yPosition - height/2;
-        this.hitBox = new Rectangle(xPosition, yPosition, width, height);
         this.shipTexture = GameScreen.textureAtlas.findRegion(alias+shipType+color);
 
         setShieldTexture(GameScreen.textureAtlas.findRegion(alias+"Shield"));
     }
 
-    public void setShieldTexture(TextureRegion shieldTexture) {
-        this.shieldTexture = shieldTexture;
-        if (alias.equals("Enemy")){
-            shieldTexture.flip(false,true);
-        }
+    public void translate(float xChange, float yChange){
+        hitBox.setPosition(hitBox.x + xChange, hitBox.y + yChange);
     }
+
+
 
     public boolean intersects(Rectangle rectangle){
         return hitBox.overlaps(rectangle);
@@ -66,7 +58,6 @@ public abstract class SpaceShip {
         if (laserCoolDownTimer > 0){
             laserCoolDownTimer -= delta;
         }
-        hitBox.set(xPosition,yPosition,width,height);
 
         Iterator<Laser> iterator = lasers.iterator();
         while (iterator.hasNext()) {
@@ -81,6 +72,18 @@ public abstract class SpaceShip {
     public abstract void fireLasers();
     public abstract void draw(Batch batch);
     public void hit(Laser laser) {
+
+    }
+
+    public void setShieldTexture(TextureRegion shieldTexture) {
+        this.shieldTexture = shieldTexture;
+        if (alias.equals("Enemy")){
+            shieldTexture.flip(false,true);
+        }
+    }
+
+    public void setMovement(float movement) {
+        this.movement = movement;
     }
 
     public float getMovement() {
@@ -115,22 +118,6 @@ public abstract class SpaceShip {
         return lasers;
     }
 
-    public float getxPosition() {
-        return xPosition;
-    }
-
-    public float getyPosition() {
-        return yPosition;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
     public TextureRegion getShipTexture() {
         return shipTexture;
     }
@@ -139,5 +126,7 @@ public abstract class SpaceShip {
         return shieldTexture;
     }
 
-
+    public Rectangle getHitBox() {
+        return hitBox;
+    }
 }

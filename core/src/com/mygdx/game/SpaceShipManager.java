@@ -9,23 +9,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class SpaceShips {
+public class SpaceShipManager {
 
     private List<SpaceShip> spaceShips = new ArrayList<>();
 
     private List<Laser> lasers = new ArrayList<>();
 
 
-    public SpaceShips(){
-
-        spaceShips.add( makeSpaceShip("Player","Normal","Blue"));
-        spaceShips.add( makeSpaceShip("Enemy","Sparrow","Red"));
+    public SpaceShipManager(){
 
 
     }
 
     public SpaceShip makeSpaceShip(String alias, String shipType, String color){
-
+        SpaceShip spaceShip = null;
         // Alias options: Enemy, Player
         // ShipType options: Normal, Sparrow
         // Color options: Normal only has blue option, Sparrow only has red option
@@ -36,15 +33,15 @@ public class SpaceShips {
         }
 
         if (shipType.equals("Sparrow")){
-            return new SparrowShip( alias, shipType, color, GameScreen.WORLD_WIDTH/2,
+            spaceShip =  new SparrowShip( alias, shipType, color, GameScreen.WORLD_WIDTH/2,
                     GameScreen.WORLD_HEIGHT*(positionModifier/4));
         }
         else {
-            return new NormalShip( alias, shipType, color, GameScreen.WORLD_WIDTH/2,
+            spaceShip = new NormalShip( alias, shipType, color, GameScreen.WORLD_WIDTH/2,
                     GameScreen.WORLD_HEIGHT*(positionModifier/4));
         }
-
-
+        spaceShips.add(spaceShip);
+        return spaceShip;
     }
 
 
@@ -55,7 +52,6 @@ public class SpaceShips {
             for (Laser laser : spaceShip.getLasers()) {
                 laser.update(delta);
             }
-            spaceShip.fireLasers();
             lasers.addAll(spaceShip.getLasers());
         }
 
@@ -83,6 +79,7 @@ public class SpaceShips {
 
         }
     }
+
 
 
 

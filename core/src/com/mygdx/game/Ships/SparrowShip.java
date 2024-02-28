@@ -16,8 +16,16 @@ public class SparrowShip extends SpaceShip{
         LinkedList<Laser> lasers = getLasers();
 
         if (getLaserCoolDownTimer() <= 0){
-            lasers.add(new Laser(getAlias(), getColor(),getxPosition() + ( getWidth()*0.3f ), getyPosition()+ (getHeight()*0.26f) ));
-            lasers.add(new Laser(getAlias(), getColor(),getxPosition() + ( getWidth()*0.7f ), getyPosition()+ (getHeight()*0.26f) ));
+            lasers.add(new Laser(getAlias(), getColor(),
+                    getHitBox().getX() + ( getHitBox().getWidth()*0.3f ),
+                    getHitBox().getY() + (getHitBox().getHeight()*0.26f)
+            ));
+
+            lasers.add(new Laser(getAlias(), getColor(),
+                    getHitBox().getX() + ( getHitBox().getWidth()*0.7f ),
+                    getHitBox().getY() + (getHitBox().getHeight()*0.26f)
+            ));
+
             setLaserCoolDownTimer(0.5f);
 
         }
@@ -27,10 +35,16 @@ public class SparrowShip extends SpaceShip{
 
     @Override
     public void draw(Batch batch){
-        batch.draw(getShipTexture(), getxPosition(), getyPosition(),getWidth(), getHeight());
+        batch.draw(getShipTexture(), getHitBox().getX(), getHitBox().getY(), getHitBox().getWidth(), getHitBox().getHeight());
         if (getSheild() > 0) {
             float positionOffset = getAlias().equals("Player") ? 2 : -2;
-            batch.draw(getShieldTexture(), getxPosition()+0.5f, getyPosition() + positionOffset, getWidth() - 1, getHeight());
+            batch.draw(
+                    getShieldTexture(),
+                    getHitBox().getX()+0.5f,
+                    getHitBox().getY() + positionOffset,
+                    getHitBox().getWidth() -1,
+                    getHitBox().getHeight()
+            );
         }
     }
 }

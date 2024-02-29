@@ -3,6 +3,7 @@ package com.mygdx.game.Ships;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.Laser;
 
@@ -11,14 +12,12 @@ import java.util.LinkedList;
 
 public abstract class SpaceShip {
 
-    //stats
-    private float movement; //world units per second
-    private int sheild;
+    private float speed; //world units per second
+    private float sheild;
     private String alias;
     private String color;
     private String shipType;
     private float laserCoolDownTimer;
-
     private LinkedList<Laser> lasers = new LinkedList<>();
 
     //position & dimension
@@ -29,15 +28,18 @@ public abstract class SpaceShip {
     private TextureRegion shieldTexture;
 
 
-    public SpaceShip(String alias, String shipType, String color, float xPosition, float yPosition){
+
+
+    public SpaceShip(String alias, String shipType, String color, float xPosition, float yPosition,
+                     float speed, float shield, float width, float height, float laserCoolDownTimer){
 
         this.alias = alias;
         this.color = color;
         this.shipType = shipType;
-        this.movement = 5;
-        this.sheild = 50;
-        this.hitBox = new Rectangle(xPosition - 10/2, yPosition - 10/2, 10, 10);
-        this.laserCoolDownTimer = 0.5f;
+        this.speed = speed;
+        this.sheild = shield;
+        this.hitBox = new Rectangle(xPosition - width/2, yPosition - height/2, width, height);
+        this.laserCoolDownTimer = laserCoolDownTimer;
         this.shipTexture = GameScreen.textureAtlas.findRegion(alias+shipType+color);
 
         setShieldTexture(GameScreen.textureAtlas.findRegion(alias+"Shield"));
@@ -53,8 +55,15 @@ public abstract class SpaceShip {
         return hitBox.overlaps(rectangle);
     }
 
+    public abstract void shipBehavior(float delta);
+
 
     public void update(float delta){
+
+        if (alias.equals("Enemy")){
+            shipBehavior(delta);
+        }
+
         if (laserCoolDownTimer > 0){
             laserCoolDownTimer -= delta;
         }
@@ -82,15 +91,15 @@ public abstract class SpaceShip {
         }
     }
 
-    public void setMovement(float movement) {
-        this.movement = movement;
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 
-    public float getMovement() {
-        return movement;
+    public float getSpeed() {
+        return speed;
     }
 
-    public int getSheild() {
+    public float getSheild() {
         return sheild;
     }
 

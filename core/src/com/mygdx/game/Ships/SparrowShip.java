@@ -1,14 +1,86 @@
 package com.mygdx.game.Ships;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameScreen;
 import com.mygdx.game.Laser;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 public class SparrowShip extends SpaceShip{
 
+    private Vector2 directionVector;
+    private float moveTimer;
+    private float moveTimeLimit;
+    private float waitTimer;
+    private float waitTimeLimit;
+
     public SparrowShip(String alias, String shipType, String color, float xPosition, float yPosition) {
-        super(alias, shipType, color, xPosition, yPosition);
+        super(alias, shipType, color, xPosition, yPosition, 35,10,10,10,0.5f);
+
+        directionVector = new Vector2(0, -1);
+        moveTimeLimit = 0.75f;
+        waitTimeLimit = 1f;
+        moveTimer = moveTimeLimit;
+        waitTimer = waitTimeLimit;
+    }
+    float time = 0;
+    @Override
+    public void shipBehavior(float delta) {
+
+        fireLasers();
+
+
+        if (moveTimer > 0 ){
+            moveTimer -= delta;
+            time += delta;
+            float xChange = directionVector.x * getSpeed() * delta;
+            float yChange = directionVector.y * getSpeed() * delta;
+            translate(xChange,yChange);
+            time = 0;
+
+        }
+        else if (moveTimer <= 0){
+            if (waitTimer>0){
+                waitTimer -= delta;
+                time += delta;
+
+            }
+            else if (waitTimer <= 0){
+                System.out.println(time);
+                randomizeDirectionVector();
+                moveTimer = moveTimeLimit;
+                waitTimer = waitTimeLimit;
+            }
+        }
+
+
+        if (getHitBox().getX() < 0) {
+             getHitBox().setX(0);
+
+        } else if (getHitBox().getX() + getHitBox().getWidth() > GameScreen.WORLD_WIDTH) {
+             getHitBox().setX(GameScreen.WORLD_WIDTH - getHitBox().getWidth());
+        }
+
+        if (getHitBox().getY() > GameScreen.WORLD_HEIGHT - getHitBox().getHeight()) {
+             getHitBox().setY(GameScreen.WORLD_HEIGHT - getHitBox().getHeight());
+
+        } else if (getHitBox().getY()  < GameScreen.WORLD_HEIGHT/2 + getHitBox().getHeight()) {
+            getHitBox().setY(GameScreen.WORLD_HEIGHT/2 + getHitBox().getHeight());
+        }
+
+
+    }
+
+    private void randomizeDirectionVector(){
+        Random random = new Random();
+
+        double angle = random.nextDouble(0,Math.PI*2);
+
+
+        directionVector.x = (float) Math.sin(angle);
+        directionVector.y = (float) Math.cos(angle);
     }
 
     @Override
@@ -29,8 +101,6 @@ public class SparrowShip extends SpaceShip{
             setLaserCoolDownTimer(0.5f);
 
         }
-
-
     }
 
     @Override

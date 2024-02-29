@@ -7,8 +7,13 @@ import java.util.LinkedList;
 
 public class NormalShip extends SpaceShip{
     public NormalShip(String alias, String shipType, String color, float xPosition, float yPosition) {
-        super(alias, shipType, color, xPosition, yPosition);
-        setMovement(20);
+        super(alias, shipType, color, xPosition, yPosition,25,50,10,10,0.5f);
+
+    }
+
+    @Override
+    public void shipBehavior(float delta) {
+
     }
 
     @Override
@@ -32,7 +37,6 @@ public class NormalShip extends SpaceShip{
                 setLaserCoolDownTimer(0.5f);
 
             }
-
             setLaserCoolDownTimer(0.5f);
 
         }

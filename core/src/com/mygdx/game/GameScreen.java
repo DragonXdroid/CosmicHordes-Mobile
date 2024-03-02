@@ -30,6 +30,9 @@ public class GameScreen implements Screen {
     public static final float WORLD_WIDTH = 72;
     public static final float WORLD_HEIGHT = 128;
 
+    // Level
+    public Level level;
+
 
     public GameScreen (){
         camera = new OrthographicCamera();
@@ -38,8 +41,11 @@ public class GameScreen implements Screen {
         backgroundManager = new BackgroundManager();
         spaceShipManager = new SpaceShipManager();
 
-        playerShip = spaceShipManager.makeSpaceShip("Player","Normal","Blue");
-        spaceShipManager.makeSpaceShip("Enemy","Sparrow","Red");
+        playerShip = spaceShipManager.makeSpaceShip("Player","Normal","Blue", WORLD_WIDTH/2, WORLD_WIDTH/4);
+        spaceShipManager.addSpaceShip(playerShip);
+
+        level = new Level(spaceShipManager);
+
 
         batch = new SpriteBatch();
     }
@@ -60,6 +66,7 @@ public class GameScreen implements Screen {
         //spaceships
         spaceShipManager.draw(batch);
         spaceShipManager.update(delta);
+        level.update(delta);
 
         input(delta);
 
@@ -86,6 +93,10 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             yChange -= 1; // Down movement
         }
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+            playerShip.fireLasers();
+        }
+
 
         // Normalize the vector
         if (xChange != 0 || yChange != 0) {
@@ -94,30 +105,30 @@ public class GameScreen implements Screen {
             yChange /= length;
         }
 
-        if (Gdx.input.isTouched()){
-
-            float xTouchPosition = Gdx.input.getX();
-            float yTouchPosition = Gdx.input.getY();
-
-            Vector2 touchPosition = new Vector2(xTouchPosition, yTouchPosition);
-            touchPosition = viewport.unproject(touchPosition);
-
-            Vector2 playerShipCenter = new Vector2(
-                    playerShip.getHitBox().getX() + playerShip.getHitBox().getWidth()/2,
-                    playerShip.getHitBox().getY() + playerShip.getHitBox().getHeight()/2
-            );
-
-            float touchDistance = touchPosition.dst(playerShipCenter);
-
-            if (touchDistance > TOUCH_MOVEMENT_THRESHOLD){
-                float xTouchDifference = touchPosition.x - playerShipCenter.x;
-                float yTouchDifference = touchPosition.y - playerShipCenter.y;
-
-                xChange = xTouchDifference / touchDistance;
-                yChange = yTouchDifference / touchDistance;
-
-            }
-        }
+//        if (Gdx.input.isTouched()){
+//
+//            float xTouchPosition = Gdx.input.getX();
+//            float yTouchPosition = Gdx.input.getY();
+//
+//            Vector2 touchPosition = new Vector2(xTouchPosition, yTouchPosition);
+//            touchPosition = viewport.unproject(touchPosition);
+//
+//            Vector2 playerShipCenter = new Vector2(
+//                    playerShip.getHitBox().getX() + playerShip.getHitBox().getWidth()/2,
+//                    playerShip.getHitBox().getY() + playerShip.getHitBox().getHeight()/2
+//            );
+//
+//            float touchDistance = touchPosition.dst(playerShipCenter);
+//
+//            if (touchDistance > TOUCH_MOVEMENT_THRESHOLD){
+//                float xTouchDifference = touchPosition.x - playerShipCenter.x;
+//                float yTouchDifference = touchPosition.y - playerShipCenter.y;
+//
+//                xChange = xTouchDifference / touchDistance;
+//                yChange = yTouchDifference / touchDistance;
+//
+//            }
+//        }
 
         playerShip.translate(xChange * playerShip.getSpeed() * delta, yChange * playerShip.getSpeed() * delta);
 

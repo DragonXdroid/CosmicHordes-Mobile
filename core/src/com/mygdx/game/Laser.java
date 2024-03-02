@@ -13,6 +13,7 @@ public class Laser {
     private Rectangle hitBox;
     private String alias;
     private String status;
+    private float damage;
 
 
     TextureRegion textureRegion;
@@ -23,6 +24,7 @@ public class Laser {
         this.textureRegion = GameScreen.textureAtlas.findRegion("Laser" + color);
         this.status = "Alive";
         this.hitBox = new Rectangle(xPosition - 0.4f/2, yPosition, 0.4f, 4);
+        this.damage = 10;
     }
 
     public void update(float delta) {
@@ -50,5 +52,9 @@ public class Laser {
 
     public float getMovementSpeed() {
         return movementSpeed;
+    }
+
+    public float getDamage() {
+        return damage;
     }
 }

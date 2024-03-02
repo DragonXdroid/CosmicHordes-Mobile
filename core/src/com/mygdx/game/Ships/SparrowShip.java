@@ -17,44 +17,24 @@ public class SparrowShip extends SpaceShip{
     private float waitTimeLimit;
 
     public SparrowShip(String alias, String shipType, String color, float xPosition, float yPosition) {
-        super(alias, shipType, color, xPosition, yPosition, 35,10,10,10,0.5f);
+        super(alias, shipType, color, xPosition, yPosition, 15,10,10,10,1f,50);
 
         directionVector = new Vector2(0, -1);
         moveTimeLimit = 0.75f;
         waitTimeLimit = 1f;
         moveTimer = moveTimeLimit;
         waitTimer = waitTimeLimit;
+
     }
     float time = 0;
     @Override
     public void shipBehavior(float delta) {
 
-        fireLasers();
+        //fireLasers();
 
-
-        if (moveTimer > 0 ){
-            moveTimer -= delta;
-            time += delta;
-            float xChange = directionVector.x * getSpeed() * delta;
-            float yChange = directionVector.y * getSpeed() * delta;
-            translate(xChange,yChange);
-            time = 0;
-
-        }
-        else if (moveTimer <= 0){
-            if (waitTimer>0){
-                waitTimer -= delta;
-                time += delta;
-
-            }
-            else if (waitTimer <= 0){
-                System.out.println(time);
-                randomizeDirectionVector();
-                moveTimer = moveTimeLimit;
-                waitTimer = waitTimeLimit;
-            }
-        }
-
+        float xChange = 0;
+        float yChange = -getSpeed() * delta;
+        translate(xChange,yChange);
 
         if (getHitBox().getX() < 0) {
              getHitBox().setX(0);
@@ -63,21 +43,12 @@ public class SparrowShip extends SpaceShip{
              getHitBox().setX(GameScreen.WORLD_WIDTH - getHitBox().getWidth());
         }
 
-        if (getHitBox().getY() > GameScreen.WORLD_HEIGHT - getHitBox().getHeight()) {
-             getHitBox().setY(GameScreen.WORLD_HEIGHT - getHitBox().getHeight());
-
-        } else if (getHitBox().getY()  < GameScreen.WORLD_HEIGHT/2 + getHitBox().getHeight()) {
-            getHitBox().setY(GameScreen.WORLD_HEIGHT/2 + getHitBox().getHeight());
-        }
-
-
     }
 
     private void randomizeDirectionVector(){
         Random random = new Random();
 
         double angle = random.nextDouble(0,Math.PI*2);
-
 
         directionVector.x = (float) Math.sin(angle);
         directionVector.y = (float) Math.cos(angle);

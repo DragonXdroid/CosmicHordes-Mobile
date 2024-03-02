@@ -18,6 +18,7 @@ public abstract class SpaceShip {
     private String color;
     private String shipType;
     private float laserCoolDownTimer;
+    private float health;
     private LinkedList<Laser> lasers = new LinkedList<>();
 
     //position & dimension
@@ -28,12 +29,12 @@ public abstract class SpaceShip {
     private TextureRegion shieldTexture;
 
 
-
-
     public SpaceShip(String alias, String shipType, String color, float xPosition, float yPosition,
-                     float speed, float shield, float width, float height, float laserCoolDownTimer){
+                     float speed, float shield, float width, float height, float laserCoolDownTimer,
+                     float health){
 
         this.alias = alias;
+        this.health = health;
         this.color = color;
         this.shipType = shipType;
         this.speed = speed;
@@ -80,7 +81,16 @@ public abstract class SpaceShip {
 
     public abstract void fireLasers();
     public abstract void draw(Batch batch);
+
     public void hit(Laser laser) {
+        if (sheild >= 0){
+            sheild -= laser.getDamage();
+        } else {
+            health -= laser.getDamage();
+        }
+        if (alias.equals("Enemy")){
+            System.out.println(health);
+        }
 
     }
 
@@ -137,5 +147,13 @@ public abstract class SpaceShip {
 
     public Rectangle getHitBox() {
         return hitBox;
+    }
+
+    public float getHealth() {
+        return health;
+    }
+
+    public void setHealth(float health) {
+        this.health = health;
     }
 }

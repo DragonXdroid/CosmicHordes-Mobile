@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import java.awt.Rectangle;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Explosion {
 
@@ -14,7 +13,7 @@ public class Explosion {
 
     private Rectangle boundingBox;
 
-    public Explosion(Texture texture, float animationTime, Rectangle boundingBox) {
+    public Explosion(Texture texture, float animationTime, com.badlogic.gdx.math.Rectangle boundingBox) {
         this.boundingBox = boundingBox;
 
         TextureRegion[][] textureRegion2D = TextureRegion.split(texture, 64, 64);

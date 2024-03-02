@@ -1,6 +1,8 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Ships.NormalShip;
 import com.mygdx.game.Ships.SpaceShip;
 import com.mygdx.game.Ships.SparrowShip;
@@ -16,6 +18,8 @@ public class SpaceShipManager {
     private List<Explosion> explosions = new ArrayList<>();
     private SpaceShip playerSpaceShip;
     private List<Laser> lasers = new ArrayList<>();
+
+    Texture explosionTexture = new Texture("explosion.png");
 
     public SpaceShipManager(){
 
@@ -54,6 +58,7 @@ public class SpaceShipManager {
                 iterator.remove(); // Remove the current spaceShip from the list
             }
             if (spaceShip.getHealth() <= 0){
+                explosions.add(new Explosion(explosionTexture, 0.7f ,new Rectangle(spaceShip.getHitBox())  ));
                 iterator.remove();
             }
             for (Laser laser : spaceShip.getLasers()) {
@@ -79,13 +84,12 @@ public class SpaceShipManager {
         ListIterator<Explosion> explosionListIterator = explosions.listIterator();
         while (explosionListIterator.hasNext()){
             Explosion explosion = explosionListIterator.next();
+            explosion.update(delta);
             if (explosion.isAnimationFinished()){
                 explosionListIterator.remove();
             }
         }
-
     }
-
 
     public void draw(Batch batch){
         for (SpaceShip spaceShip : spaceShips){

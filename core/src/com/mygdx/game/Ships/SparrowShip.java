@@ -13,24 +13,30 @@ public class SparrowShip extends SpaceShip{
     private Vector2 directionVector;
     private float moveTimer;
     private float moveTimeLimit;
-    private float waitTimer;
+    private float fireLaserTimer;
     private float waitTimeLimit;
 
     public SparrowShip(String alias, String shipType, String color, float xPosition, float yPosition) {
-        super(alias, shipType, color, xPosition, yPosition, 15,10,10,10,1f,50);
+        super(alias, shipType, color, xPosition, yPosition, 10,10,10,10,1f,20);
 
         directionVector = new Vector2(0, -1);
         moveTimeLimit = 0.75f;
         waitTimeLimit = 1f;
         moveTimer = moveTimeLimit;
-        waitTimer = waitTimeLimit;
+        fireLaserTimer = 2;
 
     }
-    float time = 0;
+
     @Override
     public void shipBehavior(float delta) {
 
-        //fireLasers();
+        fireLaserTimer -= delta;
+
+        if (fireLaserTimer <= 0){
+            fireLasers();
+            fireLaserTimer = 4;
+        }
+
 
         float xChange = 0;
         float yChange = -getSpeed() * delta;

@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.mygdx.game.Screens.GameScreen;
 import com.mygdx.game.Ships.SpaceShip;
 
 import java.util.ArrayList;
@@ -8,33 +9,36 @@ import java.util.List;
 public class Wave {
 
     List<SpaceShip> enemies = new ArrayList<>();
-    SpaceShipManager spaceShipManager;
+    EntityManager entityManager;
     private int waveNumber;
     private String waveStatus;
 
-    public Wave(SpaceShipManager spaceShipManager, int waveNumber) {
+    public Wave(EntityManager entityManager, int waveNumber) {
         this.waveNumber = waveNumber;
-        this.spaceShipManager = spaceShipManager;
+        this.entityManager = entityManager;
         waveStatus = "Loading";
         load();
         waveStatus = "Ready";
     }
 
     public void load (){
-        enemies.add(spaceShipManager.makeSpaceShip("Enemy","Sparrow","Red",GameScreen.WORLD_WIDTH*(1f/5f), GameScreen.WORLD_HEIGHT * 1.25f));
-        enemies.add(spaceShipManager.makeSpaceShip("Enemy","Sparrow","Red",GameScreen.WORLD_WIDTH*(3f/6f), GameScreen.WORLD_HEIGHT * 1.25f));
-        enemies.add(spaceShipManager.makeSpaceShip("Enemy","Sparrow","Red",GameScreen.WORLD_WIDTH*(4f/5f), GameScreen.WORLD_HEIGHT * 1.25f));
+        enemies.add(entityManager.makeSpaceShip("Enemy","Sparrow","Red",
+                CosmicHordesMobile.WORLD_WIDTH*(1f/5f), CosmicHordesMobile.WORLD_HEIGHT * 1.25f));
+        enemies.add(entityManager.makeSpaceShip("Enemy","Sparrow","Red",
+                CosmicHordesMobile.WORLD_WIDTH*(3f/6f), CosmicHordesMobile.WORLD_HEIGHT * 1.25f));
+        enemies.add(entityManager.makeSpaceShip("Enemy","Sparrow","Red",
+                CosmicHordesMobile.WORLD_WIDTH*(4f/5f), CosmicHordesMobile.WORLD_HEIGHT * 1.25f));
     }
 
     public void begin(){
         for (SpaceShip spaceShip : enemies){
-            spaceShipManager.addSpaceShip(spaceShip);
+            entityManager.addToCurrentSpaceShips(spaceShip);
         }
     }
 
     public void update (float delta){
 
-        if (spaceShipManager.getEnemySpaceShips().size() == 0){
+        if (entityManager.getEnemySpaceShips().size() == 0){
             waveStatus = "Completed";
         }
     }

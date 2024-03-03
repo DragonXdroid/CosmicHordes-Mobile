@@ -3,8 +3,7 @@ package com.mygdx.game.Ships;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.GameScreen;
+import com.mygdx.game.Screens.GameScreen;
 import com.mygdx.game.Laser;
 
 import java.util.Iterator;

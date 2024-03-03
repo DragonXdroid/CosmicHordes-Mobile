@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Ships.NormalShip;
@@ -12,18 +11,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class SpaceShipManager {
+public class EntityManager {
 
-    private List<SpaceShip> spaceShips = new ArrayList<>();
+    private List<SpaceShip> currentSpaceShips = new ArrayList<>();
     private List<Explosion> explosions = new ArrayList<>();
     private SpaceShip playerSpaceShip;
-    private List<Laser> lasers = new ArrayList<>();
-
-    Texture explosionTexture = new Texture("explosion.png");
-
-    public SpaceShipManager(){
-
-    }
 
     public SpaceShip makeSpaceShip(String alias, String shipType, String color, float xPosition, float yPosition){
         SpaceShip spaceShip = null;
@@ -40,17 +32,23 @@ public class SpaceShipManager {
         return spaceShip;
     }
 
-    public void addSpaceShip(SpaceShip spaceShip){
+    public void addToCurrentSpaceShips(SpaceShip spaceShip){
         if (spaceShip.getAlias().equals("Player")){
             setPlayerSpaceShip(spaceShip);
         }
-        spaceShips.add(spaceShip);
+        currentSpaceShips.add(spaceShip);
     }
 
-
     public void update(float delta){
+        currentSpaceShipsUpdate(delta);
+        laserUpdate(delta);
+        explosionUpdate(delta);
+        checkCollisions(delta);
 
-        Iterator<SpaceShip> iterator = spaceShips.iterator();
+    }
+
+    private void currentSpaceShipsUpdate(float delta){
+        Iterator<SpaceShip> iterator = currentSpaceShips.iterator();
         while (iterator.hasNext()) {
             SpaceShip spaceShip = iterator.next();
             spaceShip.update(delta);
@@ -58,17 +56,24 @@ public class SpaceShipManager {
                 iterator.remove(); // Remove the current spaceShip from the list
             }
             if (spaceShip.getHealth() <= 0){
-                explosions.add(new Explosion(explosionTexture, 0.7f ,new Rectangle(spaceShip.getHitBox())  ));
+                explosions.add(new Explosion(0.7f ,new Rectangle(spaceShip.getHitBox())));
                 iterator.remove();
             }
+        }
+    }
+
+    private void laserUpdate(float delta){
+        Iterator<SpaceShip> iterator = currentSpaceShips.iterator();
+        while (iterator.hasNext()) {
+            SpaceShip spaceShip = iterator.next();
             for (Laser laser : spaceShip.getLasers()) {
                 laser.update(delta);
             }
-            lasers.addAll(spaceShip.getLasers());
         }
+    }
 
-
-        Iterator<SpaceShip> spaceShipIterator = spaceShips.iterator();
+    private void checkCollisions(float delta){
+        Iterator<SpaceShip> spaceShipIterator = currentSpaceShips.iterator();
         while (spaceShipIterator.hasNext()) {
             SpaceShip spaceShip = spaceShipIterator.next();
             for (Laser laser : getLasers()) {
@@ -80,7 +85,9 @@ public class SpaceShipManager {
                 }
             }
         }
+    }
 
+    private void explosionUpdate(float delta){
         ListIterator<Explosion> explosionListIterator = explosions.listIterator();
         while (explosionListIterator.hasNext()){
             Explosion explosion = explosionListIterator.next();
@@ -92,7 +99,7 @@ public class SpaceShipManager {
     }
 
     public void draw(Batch batch){
-        for (SpaceShip spaceShip : spaceShips){
+        for (SpaceShip spaceShip : currentSpaceShips){
             for (Laser laser : spaceShip.getLasers()){
                 laser.draw(batch);
             }
@@ -108,23 +115,20 @@ public class SpaceShipManager {
             throw new IllegalArgumentException("There is already a spaceShip or the spaceship " +
                     "given is not a player");
         }
-
         this.playerSpaceShip = playerSpaceShip;
     }
 
     public List<Laser> getLasers() {
         List<Laser> lasers = new ArrayList<>();
-        for (SpaceShip spaceShip : spaceShips){
+        for (SpaceShip spaceShip : currentSpaceShips){
             lasers.addAll(spaceShip.getLasers());
         }
         return lasers;
     }
 
-
-
     public List<SpaceShip> getEnemySpaceShips() {
         List<SpaceShip> list = new ArrayList<>();
-        for (SpaceShip spaceShip : spaceShips){
+        for (SpaceShip spaceShip : currentSpaceShips){
             if (spaceShip.getAlias().equals("Enemy")){
                 list.add(spaceShip);
             }

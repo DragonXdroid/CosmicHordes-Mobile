@@ -3,19 +3,18 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.Screens.GameScreen;
 
 public class Laser {
 
     //stats
+    private String alias;
+    private String status;
+    private float damage;
     private float movementSpeed;
 
     //position and dimensions
     private Rectangle hitBox;
-    private String alias;
-    private String status;
-    private float damage;
-
-
     TextureRegion textureRegion;
 
     public Laser(String alias, String color, float xPosition, float yPosition) {
@@ -38,9 +37,6 @@ public class Laser {
     public Rectangle getHitBox(){
         return hitBox;
     }
-    public String getAlias() {
-        return alias;
-    }
 
     public String getStatus() {
         return status;
@@ -48,10 +44,6 @@ public class Laser {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public float getMovementSpeed() {
-        return movementSpeed;
     }
 
     public float getDamage() {

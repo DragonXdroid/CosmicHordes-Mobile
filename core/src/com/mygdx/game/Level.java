@@ -5,17 +5,17 @@ import java.util.List;
 
 public class Level {
 
-    private final SpaceShipManager spaceShipManager;
+    private final EntityManager entityManager;
     private Wave currentWave;
 
     List<Wave> waves = new ArrayList<>();
 
-    public Level(SpaceShipManager spaceShipManager ) {
-        this.spaceShipManager = spaceShipManager;
+    public Level(EntityManager entityManager) {
+        this.entityManager = entityManager;
 
-        waves.add(new Wave(spaceShipManager,1));
-        waves.add(new Wave(spaceShipManager,2));
-        waves.add(new Wave(spaceShipManager,3));
+        waves.add(new Wave(entityManager,1));
+        waves.add(new Wave(entityManager,2));
+        waves.add(new Wave(entityManager,3));
 
 
 

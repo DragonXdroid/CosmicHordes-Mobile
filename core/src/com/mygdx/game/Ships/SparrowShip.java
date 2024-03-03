@@ -2,7 +2,8 @@ package com.mygdx.game.Ships;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.GameScreen;
+import com.mygdx.game.CosmicHordesMobile;
+import com.mygdx.game.Screens.GameScreen;
 import com.mygdx.game.Laser;
 
 import java.util.LinkedList;
@@ -37,7 +38,6 @@ public class SparrowShip extends SpaceShip{
             fireLaserTimer = 4;
         }
 
-
         float xChange = 0;
         float yChange = -getSpeed() * delta;
         translate(xChange,yChange);
@@ -45,8 +45,8 @@ public class SparrowShip extends SpaceShip{
         if (getHitBox().getX() < 0) {
              getHitBox().setX(0);
 
-        } else if (getHitBox().getX() + getHitBox().getWidth() > GameScreen.WORLD_WIDTH) {
-             getHitBox().setX(GameScreen.WORLD_WIDTH - getHitBox().getWidth());
+        } else if (getHitBox().getX() + getHitBox().getWidth() > CosmicHordesMobile.WORLD_WIDTH) {
+             getHitBox().setX(CosmicHordesMobile.WORLD_WIDTH - getHitBox().getWidth());
         }
 
     }
